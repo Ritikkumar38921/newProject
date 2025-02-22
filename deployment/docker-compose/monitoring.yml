@@ -1,53 +1,58 @@
 name: 'spring-boot-microservices-course'
 services:
-  prometheus:
-    image: prom/prometheus:v2.51.2
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    command: "--config.file=/etc/prometheus/prometheus.yml"
+  # prometheus:
+  #   image: prom/prometheus:v2.51.2
+  #   container_name: prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   command: "--config.file=/etc/prometheus/prometheus.yml"
 
-  promtail:
-    image: grafana/promtail:3.0.0
-    container_name: promtail
-    volumes:
-      - ./promtail/promtail-docker-config.yml:/etc/promtail/docker-config.yml
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: "--config.file=/etc/promtail/docker-config.yml"
+  # promtail:
+  #   image: grafana/promtail:3.0.0
+  #   container_name: promtail
+  #   volumes:
+  #     - ./promtail/promtail-docker-config.yml:/etc/promtail/docker-config.yml
+  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: "--config.file=/etc/promtail/docker-config.yml"
 
   loki:
     image: grafana/loki:3.0.0
-    container_name: loki
+    container_name: loki16
     command: "-config.file=/etc/loki/local-config.yaml"
     ports:
       - "3100:3100"
-    depends_on:
-      - promtail
+    # depends_on:
+    #   - promtail
 
-  tempo:
-    image: grafana/tempo:2.4.1
-    container_name: tempo
-    command: "-config.file /etc/tempo-config.yml"
-    ports:
-      - "3200:3200"     # Tempo
-      - "9411:9411"     # Zipkin
-    volumes:
-      - ./tempo/tempo.yml:/etc/tempo-config.yml
+  # tempo:
+  #   image: grafana/tempo:2.4.1
+  #   container_name: tempo
+  #   command: "-config.file /etc/tempo-config.yml"
+  #   ports:
+  #     - "3200:3200"     # Tempo
+  #     - "9411:9411"     # Zipkin
+  #   volumes:
+  #     - ./tempo/tempo.yml:/etc/tempo-config.yml
 
   grafana:
-    image: grafana/grafana:10.4.2
-    container_name: grafana
+    # image: grafana/grafana:10.4.2
+    image: grafana/grafana-enterprise-dev:11.4.0-79600
+    # image: ritikumar38921/grafana:2.0.0
+    container_name: grafana100
     ports:
-      - "3000:3000"
+      - "4000:3000"
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana_data100:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin123
-      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_DEFAULT_THEME=light
+      # - GF_USERS_ALLOW_SIGN_UP=false
+      # - GF_WHITE_LABELING_APP_TITLE=Imapkt App
+      # - GF_WHITE_LABELING_APP_LOGIN_TITLE=Welcome to Imapkt App
 
 volumes:
-  grafana_data: {}
+  grafana_data100: {}
